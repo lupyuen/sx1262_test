@@ -24,8 +24,8 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
-#include "../../../nuttx/libs/libsx1262/include/radio.h"
-#include "../../../nuttx/libs/libsx1262/include/sx126x-board.h"
+#include "../libs/libsx1262/include/radio.h"
+#include "../libs/libsx1262/include/sx126x-board.h"
 
 /// TODO: We are using LoRa Frequency 923 MHz for Singapore. Change this for your region.
 #define USE_BAND_923
