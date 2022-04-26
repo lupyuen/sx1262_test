@@ -89,13 +89,8 @@ static void read_registers(void);
 static void init_driver(void);
 static void send_message(void);
 static void receive_message(void);
-static void create_task(void);
 
 int main(int argc, FAR char *argv[]) {
-
-    /* Call SX1262 Library */
-
-    test_libsx1262();
 
 //  Uncomment to read SX1262 registers
 //  #define READ_REGISTERS
@@ -104,9 +99,6 @@ int main(int argc, FAR char *argv[]) {
     read_registers();
 #endif  //  READ_REGISTERS
 
-    //  TODO: Create a Background Thread to handle LoRa Events
-    create_task();
-
     //  Init SX1262 driver
     init_driver();
 
@@ -114,14 +106,14 @@ int main(int argc, FAR char *argv[]) {
     sleep(1);
 
 //  Uncomment to send a LoRa message
-//  #define SEND_MESSAGE
+#define SEND_MESSAGE
 #ifdef SEND_MESSAGE
     //  Send a LoRa message
     send_message();
 #endif  //  SEND_MESSAGE
 
 //  Uncomment to receive a LoRa message
-#define RECEIVE_MESSAGE
+//  #define RECEIVE_MESSAGE
 #ifdef RECEIVE_MESSAGE
     //  Handle LoRa events for the next 10 seconds
     for (int i = 0; i < 10; i++) {
@@ -140,6 +132,10 @@ int main(int argc, FAR char *argv[]) {
     //  close(spi);
     puts("Done!");
     return 0;
+
+    UNUSED(read_registers);
+    UNUSED(send_message);
+    UNUSED(receive_message);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -352,81 +348,4 @@ static void on_rx_error(void) {
 
     //  TODO: Send a "PING" or "PONG" LoRa message
     //  os_eventq_put(os_eventq_dflt_get(), &loraping_ev_tx);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Multitasking Commands
-
-/// Event Queue containing Events to be processed
-////TODO struct ble_npl_eventq event_queue;
-
-/// Event to be added to the Event Queue
-////TODO struct ble_npl_event event;
-
-static void task_callback(void *arg);
-static void handle_event(struct ble_npl_event *ev);
-
-/// TODO: Create a Background Task to handle LoRa Events
-/// This is unused because we don't have a Background Thread to process the Event Queue.
-static void create_task(void) {
-    puts("TODO: create_task");
-
-#ifdef TODO
-    //  Init the Event Queue
-    ble_npl_eventq_init(&event_queue);
-
-    //  Init the Event
-    ble_npl_event_init(
-        &event,        //  Event
-        handle_event,  //  Event Handler Function
-        NULL           //  Argument to be passed to Event Handler
-    );
-#endif  //  TODO
-
-    //  TODO: Create a Background Thread to process the Event Queue
-    //  nimble_port_freertos_init(task_callback);
-}
-
-/// TODO: Enqueue an Event into the Event Queue.
-/// This is unused because we don't have a Background Thread to process the Event Queue.
-static void put_event(char *buf, int len, int argc, char **argv) {
-    puts("TODO: put_event");
-
-#ifdef TODO
-    //  Add the Event to the Event Queue
-    ble_npl_eventq_put(&event_queue, &event);
-#endif  //  TODO
-}
-
-/// TODO: Task Function that dequeues Events from the Event Queue and processes the Events.
-/// This is unused because we don't have a Background Thread to process the Event Queue.
-static void task_callback(void *arg) {
-    puts("TODO: task_callback");
-
-#ifdef TODO
-    //  Loop forever handling Events from the Event Queue
-    for (;;) {
-        //  Get the next Event from the Event Queue
-        struct ble_npl_event *ev = ble_npl_eventq_get(
-            &event_queue,  //  Event Queue
-            1000           //  Timeout in 1,000 ticks
-        );
-
-        //  If no Event due to timeout, wait for next Event
-        if (ev == NULL) { continue; }
-
-        //  Remove the Event from the Event Queue
-        ble_npl_eventq_remove(&event_queue, ev);
-
-        //  Trigger the Event Handler Function (handle_event)
-        ble_npl_event_run(ev);
-    }
-#endif  //  TODO
-}
-
-/// TODO: Handle an Event
-/// This is unused because we don't have a Background Thread to process the Event Queue.
-static void handle_event(struct ble_npl_event *ev) {
-    puts("handle_event");
-    puts("Handle an event");
 }
